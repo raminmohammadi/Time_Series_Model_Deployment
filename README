@@ -1,0 +1,4 @@
+Step 1: Download data and create gs bucket
+Step 2: initialize git and dvc then add config to dvc file as:
+    1 - dvc remote add -d timeseries_data_repo gs://timeseries-lab
+    2 - dvc remote modify --timeseries_lab credentialpath timeseries-end-to-end-404019-570bf9fb54eb.json 
