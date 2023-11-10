@@ -1,0 +1,5 @@
+outs:
+- md5: ffac951f19d76fa82cd7478ea75e4989
+  size: 1298197
+  hash: md5
+  path: AirQualityUCI.xlsx

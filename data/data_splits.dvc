@@ -1,0 +1,6 @@
+outs:
+- md5: 05f353e676a31e5870dffd40eef00f07.dir
+  size: 1327245
+  nfiles: 14
+  hash: md5
+  path: data_splits
