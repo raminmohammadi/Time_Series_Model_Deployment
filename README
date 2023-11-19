@@ -2,3 +2,9 @@ Step 1: Download data and create gs bucket
 Step 2: initialize git and dvc then add config to dvc file as:
     1 - dvc remote add -d timeseries_data_repo gs://timeseries-lab
     2 - dvc remote modify --timeseries_lab credentialpath timeseries-end-to-end-404019-570bf9fb54eb.json 
+
+
+
+gcloud auth activate-service-account timeseries-end-to-end@timeseries-end-to-end-404019.iam.gserviceaccount.com --key-file=timeseries-end-to-end-404019-6069ad53ea9d.json --project=timeseries-end-to-end
+
+gsutil iam ch serviceAccount:timeseries-end-to-end@timeseries-end-to-end-404019.iam.gserviceaccount.com:roles/storageAdmin gs://timeseries-end-to-end 

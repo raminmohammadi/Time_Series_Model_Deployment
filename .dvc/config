@@ -1,6 +1,6 @@
 [core]
-    remote = timeseries_data_repo
+    remote = timeseries-end-to-end
     autostage = true
-['remote "timeseries_data_repo"']
-    url = gs://timeseries-lab
-    credentialpath = ../timeseries-end-to-end-404019-570bf9fb54eb.json
+['remote "timeseries-end-to-end"']
+    url = gs://timeseries-end-to-end
+    credentialpath = ../timeseries-end-to-end-404019-7769b4c8eef2.json
