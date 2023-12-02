@@ -1,10 +1,37 @@
 Step 1: Download data and create gs bucket
 Step 2: initialize git and dvc then add config to dvc file as:
     1 - dvc remote add -d timeseries_data_repo gs://timeseries-lab
-    2 - dvc remote modify --timeseries_lab credentialpath timeseries-end-to-end-404019-570bf9fb54eb.json 
+    2 - dvc remote modify --timeseries_lab credentialpath timeseries-end-to-end-406020-570bf9fb54eb.json
+
+# Run these in order
+1- gcloud auth application-default login
+2- gcloud auth activate-service-account
+timeseries-end-to-end@timeseries-end-to-end-406818.iam.gserviceaccount.com --key-file=timeseries-end-to-end-406818-f9feca5f6f00.json --project=timeseries-end-to-end-406818
 
 
+gcloud projects add-iam-policy-binding timeseries-end-to-end-406020 \
+  --member=user:r.mohammadi@northeastern.edu \
+  --role=roles/editor
 
-gcloud auth activate-service-account timeseries-end-to-end@timeseries-end-to-end-404019.iam.gserviceaccount.com --key-file=timeseries-end-to-end-404019-6069ad53ea9d.json --project=timeseries-end-to-end
+gcloud projects add-iam-policy-binding timeseries-end-to-end-406020 \
+  --member=user:r.mohammadi@northeastern.edu \
+  --role=roles/owner
 
-gsutil iam ch serviceAccount:timeseries-end-to-end@timeseries-end-to-end-404019.iam.gserviceaccount.com:roles/storageAdmin gs://timeseries-end-to-end 
+
+gcloud iam service-accounts add-iam-policy-binding --role="roles/iam.serviceAccountAdmin" --member=serviceAccount:serviceAccount:service-PROJECT_NUMBER@gcp-sa-aiplatform.iam.gserviceaccount.com
+
+
+ service-557620123241@gcp-sa-aiplatform-cc.iam.gserviceaccount.com
+
+
+gcloud projects add-iam-policy-binding timeseries-end-to-end \
+--member=timeseries-end-to-end@tiimeseries-end-to-end-406317.iam.gserviceaccount.com \
+--role=roles/iam.serviceAccountAdmin
+
+# To verify
+gcloud projects get-iam-policy timeseries-end-to-end-406020   --flatten="bindings[].members"   --format="table(bindings.role,bindings.members)"   --filter="bindings.members:user:r.mohammadi@northeastern.edu"
+
+gcloud auth activate-service-account timeseries-end-to-end@timeseries-end-to-end-406818.iam.gserviceaccount.com --key-file=timeseries-end-to-end-406818-f9feca5f6f00.json --project=timeseries-end-to-end
+
+
+gsutil iam ch serviceAccount:timeseries-end-to-end@timeseries-end-to-end-406818.iam.gserviceaccount.com:roles/storageAdmin gs://timeseries-mlops
