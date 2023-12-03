@@ -2,8 +2,8 @@ FROM python:3.9-slim
 
 WORKDIR /
 
-ENV AIP_STORAGE_URI=gs://timeseries-mlops/model
-ENV BUCKET_NAME=timeseries-mlops
+ENV AIP_STORAGE_URI=gs://timeseries-end-to-end-mlops/model
+ENV BUCKET_NAME=timeseries-end-to-end-mlops
 
 COPY trainer /trainer
 

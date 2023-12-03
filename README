@@ -6,7 +6,7 @@ Step 2: initialize git and dvc then add config to dvc file as:
 # Run these in order
 1- gcloud auth application-default login
 2- gcloud auth activate-service-account
-timeseries-end-to-end@timeseries-end-to-end-406818.iam.gserviceaccount.com --key-file=timeseries-end-to-end-406818-f9feca5f6f00.json --project=timeseries-end-to-end-406818
+timeseries-end-to-end@timeseries-end-to-end-406317.iam.gserviceaccount.com --key-file=timeseries-end-to-end-406317-08b77e4c7f05.json --project=timeseries-end-to-end-406317
 
 
 gcloud projects add-iam-policy-binding timeseries-end-to-end-406020 \
@@ -31,7 +31,7 @@ gcloud projects add-iam-policy-binding timeseries-end-to-end \
 # To verify
 gcloud projects get-iam-policy timeseries-end-to-end-406020   --flatten="bindings[].members"   --format="table(bindings.role,bindings.members)"   --filter="bindings.members:user:r.mohammadi@northeastern.edu"
 
-gcloud auth activate-service-account timeseries-end-to-end@timeseries-end-to-end-406818.iam.gserviceaccount.com --key-file=timeseries-end-to-end-406818-f9feca5f6f00.json --project=timeseries-end-to-end
+gcloud auth activate-service-account timeseries-end-to-end@timeseries-end-to-end-406317.iam.gserviceaccount.com --key-file=timeseries-end-to-end-406317-08b77e4c7f05.json --project=timeseries-end-to-end
 
 
-gsutil iam ch serviceAccount:timeseries-end-to-end@timeseries-end-to-end-406818.iam.gserviceaccount.com:roles/storageAdmin gs://timeseries-mlops
+gsutil iam ch serviceAccount:timeseries-end-to-end@timeseries-end-to-end-406317.iam.gserviceaccount.com:roles/storageAdmin gs://timeseries-end-to-end-mlops

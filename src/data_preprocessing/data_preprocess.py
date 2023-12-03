@@ -5,7 +5,7 @@ import os
 import openpyxl
 
 # Initialize a gcsfs file system object
-fs = gcsfs.GCSFileSystem(project='timeseries-end-to-end-406818')
+fs = gcsfs.GCSFileSystem(project='timeseries-end-to-end-406317')
 
 def preprocess_data(train_data, normalization_stats_gcs_path):
     """
@@ -80,12 +80,12 @@ def update_datasets(monthly_dataframes, train_data_gcs_path, test_data_gcs_path,
 
 def main():
     # Define GCS paths for the data
-    train_data_gcs_path = "gs://timeseries-mlops/data/train/train_data.csv"
-    test_data_gcs_path = "gs://timeseries-mlops/data/test/test_data.csv"
-    normalization_stats_gcs_path = "gs://timeseries-mlops/scaler/normalization_stats.json"
+    train_data_gcs_path = "gs://timeseries-end-to-end-mlops/data/train/train_data.csv"
+    test_data_gcs_path = "gs://timeseries-end-to-end-mlops/data/test/test_data.csv"
+    normalization_stats_gcs_path = "gs://timeseries-end-to-end-mlops/scaler/normalization_stats.json"
     
     # air_quality_data = pd.read_excel(os.path.join("..", "data", "AirQualityUCI.xlsx"))
-    gcs_train_data_path = "gs://timeseries-mlops/data/AirQualityUCI.xlsx"
+    gcs_train_data_path = "gs://timeseries-end-to-end-mlops/data/AirQualityUCI.xlsx"
     air_quality_data = pd.read_excel(gcs_train_data_path)
 
     print(air_quality_data)

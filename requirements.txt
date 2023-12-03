@@ -13,3 +13,4 @@ python-dotenv==1.0.0
 apache-airflow
 google-cloud-aiplatform==1.36.3
 grpcio==1.51.3
+airflow

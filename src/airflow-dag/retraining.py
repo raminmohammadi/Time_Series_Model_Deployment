@@ -1,19 +1,12 @@
 import datetime as dt
-import airflow as DAG
-from airflow.operators.bash import BashOperator
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
 
 LOCAL_PREPROCESS_FILE_PATH = '/tmp/preprocess.py'
-GITHUB_PREPROCESS_RAW_URL = ('https://raw.githubusercontent.com/raminmohammadi/Time_Series_Model_Deployment/main/src/data_preprocess.py')
+GITHUB_PREPROCESS_RAW_URL = 'https://raw.githubusercontent.com/raminmohammadi/Time_Series_Model_Deployment/main/src/data_preprocess.py'
 
-LOCAL_TRAIN_FILE_PATH='/tmp/train_mine.py'
-GITHUB_TRAIN_RAW_URL=('https://raw.githubusercontent.com/raminmohammadi/Time_Series_Model_Deployment/main/src/trainer/train_mine.py')
-
-default_args = {
-    'owner': 'timeseries-mlops',
-    'start_date': dt.datetime(2023, 11, 23),
-    'retries': 1,
-    'retry_delay': dt.timedelta(minutes=5)
-}
+LOCAL_TRAIN_FILE_PATH = '/tmp/train_TA.py'
+GITHUB_TRAIN_RAW_URL = 'https://raw.githubusercontent.com/raminmohammadi/Time_Series_Model_Deployment/main/src/trainer/train.py'
 
 default_args = {
     'owner': 'Time_Series_IE7374',
@@ -43,9 +36,8 @@ pull_train_script = BashOperator(
     dag=dag,
 )
 
-
 env = {
-    'AIP_STORAGE_URI': 'gs://timeseries-mlops/model'
+    'AIP_STORAGE_URI': 'gs://timeseries-end-to-end-mlops/model',
 }
 
 # Tasks for running scripts

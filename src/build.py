@@ -1,31 +1,55 @@
 from google.cloud import aiplatform
-import os
+import os, logging
 from dotenv import load_dotenv
 
-if os.environ.get('https_proxy'):
- del os.environ['https_proxy']
-if os.environ.get('http_proxy'):
- del os.environ['http_proxy']
+# Get the current directory
+current_directory = os.path.abspath(__file__)
 
-load_dotenv()
+# Navigate to the main folder of the repository
+main_folder = os.path.abspath(os.path.join(current_directory, "../../"))
+log_file_path = os.path.join(main_folder, 'logging/log_file.log')
+
+
+def configure_logging():
+    # Configure logging to console
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %('
+                                                   'levelname)s - %(message)s')
+
+    # Create a handler for writing logs to a local file
+    file_handler = logging.FileHandler(log_file_path)
+
+    # Set the logging level for the file handler
+    file_handler.setLevel(logging.INFO)
+
+    # Create a formatter and add it to the file handler
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(formatter)
+
+    # Add the file handler to the root logger
+    logging.getLogger().addHandler(file_handler)
+
+configure_logging()
+
+
+# load env variables
+dotenv_path = os.path.join(main_folder, 'google_cloud.env')
+load_dotenv(dotenv_path)
 
 # Configuration parameters
-BUCKET = "timeseries-mlops"
-BASE_OUTPUT_DIR = "gs://timeseries-mlops"
-AIP_MODEL_DIR = "gs://timeseries-mlops/models"
-REGION = "us-central1"
-PROJECT_ID = "timeseries-end-to-end-406818"
-CONTAINER_URI = "us-central1-docker.pkg.dev/timeseries-end-to-end-406818/artifacts/trainer:v1"
-MODEL_SERVING_CONTAINER_IMAGE_URI = "us-central1-docker.pkg.dev/timeseries-end-to-end-406818/artifacts/serve:v1"
-AIP_HEALTH_ROUTE = "/ping"
-AIP_PREDICT_ROUTE = "/predict"
-SERVICE_ACCOUNT_EMAIL = "timeseries-end-to-end@timeseries-end-to-end-406818.iam.gserviceaccount.com"
-DISPLAY_NAME = 'test_timeseries_1'
-
-aiplatform.init(project=PROJECT_ID, location=REGION,
-                staging_bucket='gs://timeseries-mlops')
+REGION = os.getenv("REGION")
+PROJECT_ID = os.getenv("PROJECT_ID")
+BASE_OUTPUT_DIR = os.getenv("BASE_OUTPUT_DIR")
+BUCKET = os.getenv("AIP_MODEL_DIR")  # Should be same as AIP_STORAGE_URI specified in the
+# docker file
+CONTAINER_URI = os.getenv("CONTAINER_URI")
+MODEL_SERVING_CONTAINER_IMAGE_URI = os.getenv("MODEL_SERVING_CONTAINER_IMAGE_URI")
+DISPLAY_NAME = 'timeseries-mlops'
+SERVICE_ACCOUNT_EMAIL = os.getenv("SERVICE_ACCOUNT_EMAIL")
 
 
+from google.oauth2 import service_account
+credentials = service_account.Credentials.from_service_account_file(os.path.join(main_folder,
+                                                                                 'timeseries-end-to-end-406317-08b77e4c7f05.json'))
 
 def initialize_aiplatform(project_id, region, bucket):
     """Initializes the AI platform with the given parameters.
@@ -34,7 +58,9 @@ def initialize_aiplatform(project_id, region, bucket):
     :param bucket: GCS bucket
     """
 
-    aiplatform.init(project=project_id, location=region, staging_bucket=bucket)
+    aiplatform.init(project=project_id,
+                    location=region,
+                    staging_bucket=bucket)
 
 
 def create_training_job(display_name, container_uri,
@@ -83,42 +109,34 @@ def deploy_model_to_endpoint(model, display_name, service_account_email):
     endpoint = model.deploy(
         deployed_model_display_name=display_name,
         sync=True,
-        service_account=service_account_email
+        service_account=service_account_email,
     )
     return endpoint
 
-
 def main():
-    # Initialize AI platform
-    initialize_aiplatform(PROJECT_ID, REGION, BUCKET)
+    # logging.basicConfig(level=logging.INFO)
+    try:
+        # Initialize AI platform
+        initialize_aiplatform(PROJECT_ID, REGION, BUCKET)
 
-    # Create and run the training job
-    training_job = create_training_job(DISPLAY_NAME, CONTAINER_URI,
-                                       MODEL_SERVING_CONTAINER_IMAGE_URI,
-                                       BUCKET)
-    model = run_training_job(training_job, DISPLAY_NAME, BASE_OUTPUT_DIR,
-                             SERVICE_ACCOUNT_EMAIL)
+        # Create and run the training job
+        training_job = create_training_job(DISPLAY_NAME, CONTAINER_URI,
+                                           MODEL_SERVING_CONTAINER_IMAGE_URI,
+                                           BUCKET)
 
-    # Deploy the model to the endpoint
-    endpoint = deploy_model_to_endpoint(model, DISPLAY_NAME,
-                                        SERVICE_ACCOUNT_EMAIL)
-    return endpoint
 
+        model = run_training_job(training_job, DISPLAY_NAME, BASE_OUTPUT_DIR,
+                                 SERVICE_ACCOUNT_EMAIL)
+
+        # Deploy the model to the endpoint
+        endpoint = deploy_model_to_endpoint(model, DISPLAY_NAME, SERVICE_ACCOUNT_EMAIL)
+
+        # logging.info("Model deployment completed successfully.")
+        return endpoint
+
+    except Exception as e:
+        # logging.error(f"Error in main: {e}")
+        raise
 
 if __name__ == '__main__':
     endpoint = main()
-
-# if __name__ == '__main__':
-#     load_dotenv()
-#
-#
-#     # Create and run the training job
-#     training_job = create_training_job(DISPLAY_NAME, CONTAINER_URI,
-#                                        MODEL_SERVING_CONTAINER_IMAGE_URI,
-#                                        BUCKET)
-#     model = run_training_job(training_job, DISPLAY_NAME, BASE_OUTPUT_DIR,
-#                              SERVICE_ACCOUNT_EMAIL)
-#
-#     # Deploy the model to the endpoint
-#     endpoint = deploy_model_to_endpoint(model, DISPLAY_NAME,
-#                                         SERVICE_ACCOUNT_EMAIL)
