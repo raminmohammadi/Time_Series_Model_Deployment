@@ -2,12 +2,7 @@ import pandas as pd
 import json
 import gcsfs
 import os
-try:
-    import openpyxl
-except ImportError:
-    print("Installing openpyxl...")
-    !pip install openpyxl
-    
+
 # Initialize a gcsfs file system object
 fs = gcsfs.GCSFileSystem(project='timeseries-end-to-end-406317')
 
